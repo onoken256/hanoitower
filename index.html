@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ハノイの塔</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>ハノイの塔</h1>
+
+<div class="panel">
+    <!-- 通常モード: 円盤数セレクター -->
+    <div class="control-group" id="diskSelGroup">
+        <label for="diskSel">円盤数</label>
+        <select id="diskSel">
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    </div>
+    <!-- リアルモード: タイトル表示 -->
+    <div class="control-group" id="realModeTitle" style="display:none">
+        <span class="real-mode-label">リアル：ハノイの塔</span>
+        <span class="real-disk-badge">64枚</span>
+    </div>
+
+    <div class="v-divider"></div>
+
+    <div class="stat">
+        <div class="stat-label">現在の手数</div>
+        <div class="stat-value" id="statMoves">0</div>
+    </div>
+
+    <div class="v-divider"></div>
+
+    <button class="btn-hint" id="hintBtn" style="display:none" onclick="showHint()">💡 ヒント</button>
+    <button class="btn-reset" onclick="resetGame()">リセット</button>
+    <button class="btn-exit-real" id="exitRealBtn" style="display:none" onclick="exitRealMode()">← 通常モード</button>
+</div>
+
+<!-- リアルモード: 最短手数の大きな表示 -->
+<div class="real-min-display" id="realMinDisplay" style="display:none">
+    <div class="real-min-label">最短手数</div>
+    <div class="real-min-value" id="realMinMoves"></div>
+</div>
+
+<div class="board-wrap" id="boardWrap">
+    <div class="game-area">
+        <div class="peg-col" id="peg0" onclick="clickPeg(0)">
+            <div class="peg-name">A</div>
+            <div class="peg-stage">
+                <div class="pole"></div>
+                <div class="disk-stack" id="stack0"></div>
+            </div>
+        </div>
+        <div class="peg-col" id="peg1" onclick="clickPeg(1)">
+            <div class="peg-name">B</div>
+            <div class="peg-stage">
+                <div class="pole"></div>
+                <div class="disk-stack" id="stack1"></div>
+            </div>
+        </div>
+        <div class="peg-col" id="peg2" onclick="clickPeg(2)">
+            <div class="peg-name">C</div>
+            <div class="peg-stage">
+                <div class="pole"></div>
+                <div class="disk-stack" id="stack2"></div>
+            </div>
+        </div>
+    </div>
+    <div class="base-platform"></div>
+</div>
+
+<div class="msg-area" id="msgArea"></div>
+<p class="hint" id="hintText">杭をクリックして円盤を選択 → 別の杭をクリックして移動</p>
+
+<!-- 3枚クリア後に出現する隠し Admin ボタン -->
+<div id="adminArea" style="display:none">
+    <button class="btn-admin" onclick="showAdminPrompt()">Admin</button>
+</div>
+
+<!-- 12枚クリア後に表示するリアルモード解放ボタン -->
+<div class="real-unlock-area" id="realUnlockArea" style="display:none">
+    <p class="unlock-lead">🎊 12枚の円盤をクリアしました！</p>
+    <p class="unlock-sub">現実のハノイの塔 — 64枚の円盤に挑戦できます。</p>
+    <button class="btn-real" onclick="enterRealMode()">🗼 リアル：ハノイの塔</button>
+</div>
+
+<!-- Admin パスワードモーダル -->
+<div class="admin-modal-overlay" id="adminModal" style="display:none" onclick="if(event.target===this)closeAdminModal()">
+    <div class="admin-modal-box">
+        <p class="admin-modal-title">Enter Password</p>
+        <input
+            type="password"
+            id="adminPasswordInput"
+            class="admin-input"
+            placeholder="password"
+            onkeydown="handleAdminKey(event)"
+        >
+        <div class="admin-modal-buttons">
+            <button class="btn-admin-cancel" onclick="closeAdminModal()">Cancel</button>
+            <button class="btn-admin-submit" onclick="submitAdminPassword()">Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- ヒントモーダル -->
+<div class="hint-modal-overlay" id="hintModal" style="display:none" onclick="closeHintModal(event)">
+    <div class="hint-modal-box">
+        <button class="hint-modal-close" onclick="document.getElementById('hintModal').style.display='none'">✕</button>
+        <h2>💡 64枚のスケール</h2>
+        <div class="hint-modal-content" id="hintContent"></div>
+    </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
